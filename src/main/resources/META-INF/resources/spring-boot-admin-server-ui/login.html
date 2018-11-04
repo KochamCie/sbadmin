@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>sba login</title>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <link href='bootstrap.min.css' rel="stylesheet" >
+
+    <style type="text/css">
+        /* Override some defaults */
+        body {
+            background-color: #eee;
+
+        }
+
+        /* The white background content wrapper */
+        .login-form {
+            width: 400px;
+            padding: 20px;
+            margin: 100px auto auto;
+            -webkit-border-radius: 10px 10px 10px 10px;
+            -moz-border-radius: 10px 10px 10px 10px;
+            border-radius: 10px 10px 10px 10px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+            box-shadow: 0 1px 2px rgba(0,0,0,.15);
+            background-color: #f2f3f4;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<div class="login-form">
+    <h2>Login</h2>
+    <form id="login" method="post" autocomplete="off" >
+        <fieldset>
+            <div id="alertInfo" class="alert alert-error clearfix" style="margin-bottom: 5px;width: 195px; padding: 2px 15px 2px 10px;display: none;">
+                The username or password you entered is incorrect.
+            </div>
+            <div class="clearfix">
+                <input type="text" placeholder="用户名" name="loginUsername" autofocus="autofocus">
+            </div>
+            <div class="clearfix">
+                <input type="password" placeholder="密码" name="loginPassword">
+            </div>
+            <button id="loginBtn" class="btn btn-primary" type="button">Sign in</button>
+            <button class="btn" type="reset">Reset</button>
+        </fieldset>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    $.namespace("druid.login");
+    druid.login = function () {
+        return  {
+            login : function() {
+                $.ajax({
+                    type: 'POST',
+                    url: "login",
+                    data: $("#login").serialize(),
+                    success: function(data) {
+                        console.log(data)
+                        if(data)
+                            location.href = "/#/";
+                        else {
+                            $("#alertInfo").show();
+                            $("#loginForm")[0].reset();
+                            $("input[name=loginUsername]").focus();
+                        }
+                    },
+                    dataType: "json"
+                });
+            },
+            unamecr : function(e) {
+                if(e.which == 13) { // enter key event
+                    $("input[name=loginPassword]").focus();
+                }
+            },
+            upasscr : function(e) {
+                if(e.which == 13) { // enter key event
+                    $("#loginBtn").click();
+                }
+            }
+        }
+    }();
+
+    $(document).ready(function() {
+        $("#loginBtn").click(druid.login.login);
+        $("input[name=loginUsername]").keypress(druid.login.unamecr);
+        $("input[name=loginPassword]").keypress(druid.login.upasscr);
+    });
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+</script>
+<script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="123" src="http://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+</body>
+</html>
